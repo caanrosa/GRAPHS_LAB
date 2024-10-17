@@ -1,14 +1,9 @@
-from Cordenadas import *
-from Mian import *
 
 class Grafo:
     def __init__(self):
         # Diccionario para almacenar los nodos con sus atributos
-        # Cada nodo apunta a otro diccionario con los atributos del nodo
         self.nodos = {}
-        
         # Diccionario para almacenar las aristas
-        # Cada nodo apunta a una lista de pares (nodo vecino, peso)
         self.aristas = {}
 
     def agregar_nodo(self, nodo, **atributos):
@@ -26,7 +21,6 @@ class Grafo:
 
         # Añadir arista de nodo1 a nodo2 con peso
         self.aristas[nodo1].append((nodo2, peso))
-        
         # Como es un grafo no dirigido, añadir la arista de nodo2 a nodo1 también
         self.aristas[nodo2].append((nodo1, peso))
 
@@ -40,32 +34,50 @@ class Grafo:
         print("\nAristas:")
         for nodo in self.aristas:
             print(f"Nodo {nodo}: {self.aristas[nodo]}")
-    
+
     def prim(self, nodo_inicial):
-        # Implementación del algoritmo de Prim para hallar el MST
-        visitado = [False] * self.V
+        # Implementación del algoritmo de Prim para hallar el MST desde un nodo inicial
+        visitado = {nodo: False for nodo in self.nodos}
         min_heap = [(0, nodo_inicial)]  # (peso, nodo)
         peso_total = 0
+
         while min_heap:
             peso, nodo = heapq.heappop(min_heap)
             if not visitado[nodo]:
                 visitado[nodo] = True
                 peso_total += peso
-                for vecino, peso_arista in self.grafo[nodo]:
+                for vecino, peso_arista in self.aristas[nodo]:
                     if not visitado[vecino]:
                         heapq.heappush(min_heap, (peso_arista, vecino))
         return peso_total
 
+    def dfs(self, nodo, visitado):
+        # Exploración DFS para obtener todos los nodos en una componente conexa
+        stack = [nodo]
+        componente = []
+        while stack:
+            actual = stack.pop()
+            if not visitado[actual]:
+                visitado[actual] = True
+                componente.append(actual)
+                for vecino, _ in self.aristas[actual]:
+                    if not visitado[vecino]:
+                        stack.append(vecino)
+        return componente
+
     def calcular_MST_por_componente(self):
-        visitado = [False] * self.V
+        visitado = {nodo: False for nodo in self.nodos}
         pesos_mst = []
-        for nodo in range(self.V):
+
+        # Explorar cada componente del grafo
+        for nodo in self.nodos:
             if not visitado[nodo]:
-                # Explorar la componente conexa del nodo
+                # Explorar la componente conexa del nodo usando DFS
                 componente = self.dfs(nodo, visitado)
                 # Aplicar Prim desde cualquier nodo de la componente
                 peso_mst = self.prim(componente[0])
                 pesos_mst.append(peso_mst)
+        
         return pesos_mst
 
 # Ejemplo de uso
