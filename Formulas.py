@@ -42,7 +42,7 @@ try:
         for fila in lector_csv:
             origen = fila['Source Airport Code']  
             destino = fila['Destination Airport Code']  
-            grafo.agregar_nodo(origen)  # Agregar el nodo del aeropuerto de origen
+            grafo.agregar_nodo(origen, fila)  # Agregar el nodo del aeropuerto de origen
             grafo.agregar_nodo(destino)  # Agregar el nodo del aeropuerto de destino
 except FileNotFoundError:
     print(f"El archivo {file_path} no existe.")
