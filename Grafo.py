@@ -1,4 +1,5 @@
-
+import csv
+import os
 class Grafo:
     def __init__(self):
         # Diccionario para almacenar los nodos con sus atributos
@@ -80,6 +81,7 @@ class Grafo:
         
         return pesos_mst
 
+
 # Ejemplo de uso
 mi_grafo = Grafo()
 
@@ -95,3 +97,5 @@ mi_grafo.agregar_arista(2, 3, 5)
 
 # Mostrar el grafo
 mi_grafo.mostrar_grafo()
+
+

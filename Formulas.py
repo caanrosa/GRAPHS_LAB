@@ -1,5 +1,4 @@
 from Grafo import *
-from Mian import *
 import math
 import csv
 import os
@@ -34,29 +33,33 @@ def distancia_Mapa(lat1, lon1, lat2, lon2):
 #distancia = distancia_Mapa(lat1, lon1, lat2, lon2)
 #print(f"La distancia entre Madrid y París es de {distancia:.2f} km")
 
-
-
+grafo = Grafo()
 dirname = os.path.dirname(__file__)
-file_path = dirname + "/dataset/short_dataset.csv" # uno con menos para poder VISUALIZARLO
-tree = AVL("Ciudad del aeropuerto orige")
-num = 10
+file_path = os.path.join(dirname, "dataset/flights_final.csv")
+try:
+    with open(file_path, mode='r') as file:
+        lector_csv = csv.DictReader(file)
+        for fila in lector_csv:
+            origen = fila['Source Airport Code']  
+            destino = fila['Destination Airport Code']  
+            grafo.agregar_nodo(origen)  # Agregar el nodo del aeropuerto de origen
+            grafo.agregar_nodo(destino)  # Agregar el nodo del aeropuerto de destino
+except FileNotFoundError:
+    print(f"El archivo {file_path} no existe.")
+try:
+    with open(file_path, mode='r') as file:
+        lector_csv = csv.DictReader(file)
+        for fila in lector_csv:
+            lat1 = fila['Source Airport Latitude']
+            lon1 = fila['Source Airport Longitude']
+            lat2 = fila['Destination Airport Latitude']
+            lon2 = fila['Destination Airport Longitude']
+            peso = distancia_Mapa(lat1,lon1,lat2,lon2)
+            grafo.agregar_arista(nod1, nod2, peso)  
 
-with open(file_path, mode='r') as file:
-    lector_csv = csv.DictReader(file)
-    for indice, fila in enumerate(lector_csv, start=1):
-        if indice == num:  # Procesar solo la fila que el usuario le pida
-            #titulo = fila['Title']
-            #datos = dict(fila)  # Convertir la fila en un diccionario
-            tree.insert(fila)
-            break  # Salir del bucle después de insertar la fila 10
+except FileNotFoundError:
+    print(f"El archivo {file_path} no existe.")
 
-with open(file_path, mode='r') as file:
-    lector_csv = csv.DictReader(file)
-    for fila in lector_csv:
-        #titulo = fila['Title']
-        #datos = dict(fila)  # Convertir la fila en un diccionario
-        tree.insert(fila)
-
-tree.graph("datasetCompleto").view()
-tree.Validacion_dataset(1000000,1000000)
+# Mostrar el grafo
+grafo.mostrar_grafo()
 
