@@ -1,3 +1,2 @@
-from Cordenadas import *
-from Grafo import *
+from Graph import *
 
