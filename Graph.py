@@ -1,7 +1,7 @@
 import csv
 import os
 from typing import List
-from Calc import *
+from util import calculate_distance
 
 class Graph:
 
