@@ -1,11 +1,11 @@
-from Graph import Graph
-from util import calculate_distance
+from Graph import *
+from Utils import calculate_distance
 import csv
 import os
 
 # Nos piden que el valor de la distancia sea el  peso  de  la  arista que conecte dos aeropuertos
 
-g = Graph(10000000)
+g = Graph(66932)
 dirname = os.path.dirname(__file__)
 file_path = os.path.join(dirname, "dataset/flights_final.csv")
 # Crear un diccionario para mapear los códigos de aeropuertos a enteros
@@ -14,24 +14,37 @@ current_id = 0
 
 # Luego agregamos las aristas
 try:
-    with open(file_path, mode='r') as file:
+    with open(file_path, mode='r', encoding="utf8") as file:
         lector_csv = csv.DictReader(file)
         
         for fila in lector_csv:
-            start = fila['Source Airport Code']
-            final = fila['Destination Airport Code']
-
-            # Procesar las coordenadas para calcular la distancia
-            lat1 = float(fila['Source Airport Latitude'])
-            lon1 = float(fila['Source Airport Longitude'])
-            lat2 = float(fila['Destination Airport Latitude'])
-            lon2 = float(fila['Destination Airport Longitude'])
-            weight = calculate_distance(lat1, lon1, lat2, lon2)
+            # Actualizar el diccionario si es necesario
+            source = Aeropuerto(fila)
+            dest = Aeropuerto(fila, True)
+            
+            if source.code not in airport_mapping:
+                airport_mapping.update({source.code: current_id})
+                current_id = current_id + 1
+            
+            
+            if dest.code not in airport_mapping:
+                airport_mapping.update({dest.code: current_id})
+                current_id = current_id + 1
+                
+            source.index = airport_mapping[source.code]
+            dest.index = airport_mapping[dest.code]
+            
+            # Agregar los aeropuertos
+            s = g.add_node(source)
+            d = g.add_node(dest)
 
             # Agregar la arista con el peso calculado
-            g.add_edge(start, final, weight)
+            e = g.add_edge(source, dest)
+            
+            if(not s or not d or not e): break
 
 except FileNotFoundError:
     print(f"El archivo {file_path} no existe.")
 
-
+print(airport_mapping)
+g.DFS(0)
