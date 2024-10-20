@@ -1,19 +1,56 @@
-import csv
-import os
 from typing import List
-from Calc import *
+from Utils import *
+
+class Aeropuerto:
+    def __init__(self, data, dest: bool = False):
+        self.index = None
+        if not dest:
+            self.code = data["Source Airport Code"]
+            self.name = data["Source Airport Name"]
+            self.city = data["Source Airport City"]
+            self.country = data["Source Airport Country"]
+            self.lat = float(data["Source Airport Latitude"])
+            self.lon = float(data["Source Airport Longitude"])
+        else:
+            self.code = data["Destination Airport Code"]
+            self.name = data["Destination Airport Name"]
+            self.city = data["Destination Airport City"]
+            self.country = data["Destination Airport Country"]
+            self.lat = float(data["Destination Airport Latitude"])
+            self.lon = float(data["Destination Airport Longitude"])
+            
+    def __str__(self):
+        return f"[code: {self.code}, name: {self.name}, city: {self.city}, country: {self.country}, lat: {self.lat}, lon: {self.lon}]"
+
+class Vuelo:
+    def __init__(self, source: Aeropuerto, dest: Aeropuerto):
+        self.source = source
+        self.dest = dest
+        
+        self.distance = calculate_distance(self.source.lat, self.source.lon, self.dest.lat, self.dest.lon)
+        
 
 class Graph:
 
     def __init__(self, n: int):
         self.n = n
-        self.L: List[List[int]] = [[] for _ in range(n)] 
+        self.L: List[List[int]] = [[] for _ in range(n)]
+        self.Aero: List[Aeropuerto] = [None for _ in range(n)]
+        
+    def add_node(self, data: Aeropuerto):
+        if(data.index < self.n and self.Aero[data.index] is None):            
+            # print(data.index)
+            self.Aero[data.index] = data
+            return True
+        else:
+            return False
 
-    def add_edge(self, u: int, v: int) -> bool:
-        if 0 <= u < self.n and 0 <= v < self.n:
+    def add_edge(self, source: Aeropuerto, dest: Aeropuerto) -> bool:
+        
+        if 0 <= source.index < self.n and 0 <= dest.index < self.n:
             # Se agrega la arista en ambas direcciones
-            self.L[u].append((v, weight))
-            self.L[v].append((u, weight))
+            self.L[source.index].append(dest.index)
+            self.L[dest.index].append(source.index)
             return True
         return False
     
@@ -23,7 +60,7 @@ class Graph:
 
     def __DFS_visit(self, u: int, visit: List[bool]) -> List[bool]:
         visit[u] = True
-        print(u, end = ' ')
+        print(self.Aero[u], end = ' ')
         for v in self.L[u]:
             if not visit[v]:
                 visit = self.__DFS_visit(v, visit)
