@@ -26,31 +26,35 @@ class Vuelo:
     def __init__(self, source: Aeropuerto, dest: Aeropuerto):
         self.source = source
         self.dest = dest
-        
         self.distance = calculate_distance(self.source.lat, self.source.lon, self.dest.lat, self.dest.lon)
         
-
 class Graph:
-
+        
     def __init__(self, n: int):
         self.n = n
         self.L: List[List[int]] = [[] for _ in range(n)]
         self.Aero: List[Aeropuerto] = [None for _ in range(n)]
+        self.weights = [[float('inf')] * n for _ in range(n)]  # Matriz de pesos
         
     def add_node(self, data: Aeropuerto):
         if(data.index < self.n and self.Aero[data.index] is None):            
-            # print(data.index)
+
             self.Aero[data.index] = data
             return True
         else:
             return False
 
     def add_edge(self, source: Aeropuerto, dest: Aeropuerto) -> bool:
-        
         if 0 <= source.index < self.n and 0 <= dest.index < self.n:
             # Se agrega la arista en ambas direcciones
             self.L[source.index].append(dest.index)
             self.L[dest.index].append(source.index)
+
+            weight = calculate_distance(source.lat, source.lon, dest.lat, dest.lon)
+            
+            self.weights[source.index][dest.index] = weight
+            self.weights[dest.index][source.index] = weight  # Si es no dirigido
+            
             return True
         return False
     
@@ -114,7 +118,8 @@ class Graph:
         key_values = [float('inf')] * self.n # Para almacenar los pesos mínimos encontrados
         parents = [-1] * self.n            # Almacena los padres de cada nodo en el MST
 
-        key_values[0] = 0  # Empezamos desde el nodo 0
+        key_values[0] = 0 # Empezamos desde el nodo 0
+        total_weight = 0
 
         print("Arista \tPeso")
         for _ in range(self.n):
@@ -122,14 +127,17 @@ class Graph:
             u = min((v for v in range(self.n) if not in_mst[v]), key=lambda v: key_values[v])
 
             in_mst[u] = True
-
             # Si el nodo tiene un padre, imprime la arista y el peso correspondiente
             if parents[u] != -1:
-                print(f"{parents[u]}-{u} \t{self.weights[u][parents[u]]}")
+                weight = self.weights[u][parents[u]]
+                print(f"{parents[u]}-{u} \t{weight}")
+                total_weight += weight
 
             # Explora los vecinos del nodo u
             for v in self.L[u]:
-                if not in_mst[v] and self.weights[u][v] < key_values[v]:  # Solo actualiza si encuentra un peso menor
+                if not in_mst[v] and self.weights[u][v] < key_values[v]:
                     key_values[v] = self.weights[u][v]
-                    parents[v] = u  # Actualiza el padre del nodo v
+                    parents[v] = u
+
+        print(f"Peso total del árbol de expansión mínima: {total_weight}")
 
