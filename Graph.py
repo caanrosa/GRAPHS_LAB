@@ -57,7 +57,7 @@ class Graph:
 
     def __DFS_visit(self, u: int, visit: List[bool]) -> List[bool]:
         visit[u] = True
-        print(self.Aero[u], end = ' ')
+        #print(self.Aero[u], end = ' ')
         for v in self.L[u]:
             if not visit[v]:
                 visit = self.__DFS_visit(v, visit)
@@ -106,34 +106,66 @@ class Graph:
             for i in range(len(components)):
                 print(f"Componente {i + 1}: {components[i]} con {len(components[i])} vértices.")
                 
-    def prim(self):
+    def prim(self, component):
+        if len(component) <= 1:
+            return 0  # Si la componente tiene 1 solo nodo, el MST es 0.
         
-        q = []  
-        Tv = [0]  # nodo 0
+        q = []
+        total_weight = 0  
+        Tv = [component[0]]  # nodo 0
         Te = []  # aristas en el árbol mínimo
 
-        for vi in self.L[0]:
-            weight = calculate_distance(self.Aero[0].lat, self.Aero[0].lon, self.Aero[vi].lat, self.Aero[vi].lon)
-            q.append((weight, (0, vi)))
+        for vi in self.L[component[0]]:
+            if vi in component:
+                peso = calculate_distance(self.Aero[component[0]].lat, self.Aero[component[0]].lon, self.Aero[vi].lat, self.Aero[vi].lon)
+                q.append((peso, (component[0], vi)))
 
         q.sort(key=lambda x: x[0])  # Ordenar por el peso de las aristas
 
-        while len(Tv) < self.n and q:
+        while len(Tv) < len(component) and q:
             weight, (vo, vi) = q.pop(0)  # Extraer la arista de menor peso
             if vi not in Tv:
+                print(f"Agregando arista: ({self.Aero[vo].code}, {self.Aero[vi].code}) con peso: {weight}")
                 Tv.append(vi)
                 Te.append((weight, (vo, vi)))
+                total_weight += weight
 
-                
                 for vk in self.L[vi]:
-                    if vk not in Tv:
-                        new_weight = calculate_distance(self.Aero[vi].lat, self.Aero[vi].lon, self.Aero[vk].lat, self.Aero[vk].lon)
-                        q.append((new_weight, (vi, vk)))
+                    if vk not in Tv and vk in component:
+                        peso_nuevo = calculate_distance(self.Aero[vi].lat, self.Aero[vi].lon, self.Aero[vk].lat, self.Aero[vk].lon)
+                        q.append((peso_nuevo, (vi, vk)))
+        
+                q.sort(key=lambda x: x[0])  # Reordenar la "cola de prioridad"
 
-                q.sort(key=lambda x: x[0])  # Reordenar la cola de prioridad
-
-        return Te           
+        return total_weight      
+    
+    def calculate_components_MST_weight(self):
+        
+        components = self.get_components()
+        total_weight_all_components = 0
+        # Una componente
+        if len(components) == 1:
+            total_weight = self.prim(components[0])
+            print(f"Peso del árbol de expansión mínima: {total_weight}")
+            return total_weight
+        
+        else:
+            # Más de una componente
+            all_weights = []
+            i = 1  
+            
+            for component in components:
+                print(f"\nCalculando MST para la componente {i}:")
+                weight = self.prim(component)
+                all_weights.append(weight)
+                total_weight_all_components += weight  
+                print(f"Peso del árbol de expansión mínima de la componente {i}: {weight}")  
+                i += 1
+                if i > 10:  # Limitar a los primeros 1000 pesos
+                    break
                 
+            print(f"\nPeso total del árbol de expansión mínima de todas las componentes: {total_weight_all_components}")
+            return all_weights                    
                 
                 
                 
