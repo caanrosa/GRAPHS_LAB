@@ -1,5 +1,7 @@
 from typing import List
 from Utils import *
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class Aeropuerto:
     def __init__(self, data, dest: bool = False):
@@ -33,9 +35,10 @@ class Vuelo:
 class Graph:
 
     def __init__(self, n: int):
+        self.view = nx.Graph()
         self.n = n
         self.L: List[List[int]] = [[] for _ in range(n)]
-        self.Aero: List[Aeropuerto] = [None for _ in range(n)]
+        self.Aero: List[Aeropuerto] = [None for _ in range(n)]        
         
     def add_node(self, data: Aeropuerto):
         if(data.index < self.n and self.Aero[data.index] is None):            
@@ -51,6 +54,8 @@ class Graph:
             # Se agrega la arista en ambas direcciones
             self.L[source.index].append(dest.index)
             self.L[dest.index].append(source.index)
+            
+            self.view.add_edge(source.index, dest.index)
             return True
         return False
     
@@ -107,7 +112,31 @@ class Graph:
             components = self.get_components()
             print("El grafo tiene", len(components), " componentes.")
             for i in range(len(components)):
-                print(f"Componente {i + 1}: {components[i]} con {len(components[i])} vértices.")
+                print(f"Componente {i + 1}: {components[i]} con {len(components[i])} vértices.")             
+                
+    def show(self):
+        node_labels = {}
+        node_positions = {}
+        for a in self.Aero:
+            if(a):
+                node_labels.update({a.index: a.code})
+                node_positions.update({a.index: (a.lon, a.lat)})
+        
+        print(f"Graficando {self.view.number_of_nodes()} nodos")
+        
+        nx.draw_networkx(self.view, with_labels = True,
+                pos = node_positions,
+                labels = node_labels,
+                font_size = 7,
+                node_size = [len(v)**2 * 35 for key, v in node_labels.items()],
+                )
+        
+        print("Mostrando")
+        plt.show()
+        
+        #labels = dict(self.Aero)
+        #nx.draw(self.view, pos, with_labels = True)
+        #plt.show()
 
     # def prim(self, nodo_inicial):
     #     # Implementación del algoritmo de Prim para hallar el MST desde un nodo inicial

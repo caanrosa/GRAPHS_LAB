@@ -44,5 +44,4 @@ try:
 except FileNotFoundError:
     print(f"El archivo {file_path} no existe.")
 
-print(airport_mapping)
-g.DFS(0)
+g.show()
