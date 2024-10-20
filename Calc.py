@@ -34,7 +34,7 @@ try:
     with open(file_path, mode='r', encoding="utf8") as file:
         lector_csv = csv.DictReader(file)
       
-        g = Graph(len(airport_mapping))
+        g = Graph(airport_mapping)
         
         for fila in lector_csv:
             source = Aeropuerto(fila)
