@@ -1,4 +1,4 @@
-
+from termcolor import colored
 from math import sin, cos, sqrt, atan2, radians
 
 def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -18,3 +18,39 @@ def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     distance = R * c
     
     return distance
+
+def printTitle(title, centerNum=64):
+    print (colored(f" {title} ".center(centerNum, "⸺"), "red"))
+    
+def printSubtitle(subtitle, centerNum=64):
+    print (colored(f" {subtitle} ".center(centerNum), "light_grey"))
+    
+def printOption(number, option, colorNumber="red", colorOption="white"):
+    op = colored(f" ({number})", colorNumber) + colored(f" {option} ", colorOption)
+    
+    print (f"{op}".center(80))
+    
+def printBottom():
+    print (colored("".center(64, "⸺"), "red"))
+             
+    
+def getInput() -> str:
+    got = ""
+    while(len(got) == 0):
+        got = input(colored("> ", "green"))
+        
+    return got
+
+def getInputInt() -> int:
+    recieved = ""
+    p = False
+    
+    while(not p):
+        recieved = getInput()
+        try:
+            int(recieved)
+            p = True
+        except ValueError:
+            p = False
+    
+    return int(recieved)
