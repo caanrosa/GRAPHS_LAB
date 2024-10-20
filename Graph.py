@@ -113,22 +113,22 @@ class Graph:
         Te = []  # aristas en el árbol mínimo
 
         for vi in self.L[0]:
-            peso = calculate_distance(self.Aero[0].lat, self.Aero[0].lon, self.Aero[vi].lat, self.Aero[vi].lon)
-            q.append((peso, (0, vi)))
+            weight = calculate_distance(self.Aero[0].lat, self.Aero[0].lon, self.Aero[vi].lat, self.Aero[vi].lon)
+            q.append((weight, (0, vi)))
 
         q.sort(key=lambda x: x[0])  # Ordenar por el peso de las aristas
 
         while len(Tv) < self.n and q:
-            peso, (vo, vi) = q.pop(0)  # Extraer la arista de menor peso
+            weight, (vo, vi) = q.pop(0)  # Extraer la arista de menor peso
             if vi not in Tv:
                 Tv.append(vi)
-                Te.append((peso, (vo, vi)))
+                Te.append((weight, (vo, vi)))
 
                 
                 for vk in self.L[vi]:
                     if vk not in Tv:
-                        peso_nuevo = calculate_distance(self.Aero[vi].lat, self.Aero[vi].lon, self.Aero[vk].lat, self.Aero[vk].lon)
-                        q.append((peso_nuevo, (vi, vk)))
+                        new_weight = calculate_distance(self.Aero[vi].lat, self.Aero[vi].lon, self.Aero[vk].lat, self.Aero[vk].lon)
+                        q.append((new_weight, (vi, vk)))
 
                 q.sort(key=lambda x: x[0])  # Reordenar la cola de prioridad
 
