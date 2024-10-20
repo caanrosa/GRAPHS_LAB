@@ -34,7 +34,7 @@ try:
     with open(file_path, mode='r', encoding="utf8") as file:
         lector_csv = csv.DictReader(file)
       
-        g = Graph(len(airport_mapping))
+        g = Graph(airport_mapping)
         
         for fila in lector_csv:
             source = Aeropuerto(fila)
@@ -42,11 +42,11 @@ try:
             source.index = airport_mapping[source.code]
             dest.index = airport_mapping[dest.code]
             
-            # Agregar los aeropuertos
+            # Agregar los aeropuertos si es necesario
             s = g.add_node(source)
             d = g.add_node(dest)
 
-            # Agregar la arista con el peso calculado
+            # Agregar la arista
             e = g.add_edge(source, dest)            
 
 except FileNotFoundError:
