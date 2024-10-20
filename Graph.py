@@ -184,8 +184,8 @@ class Graph:
             print("El grafo tiene", len(components), " componentes.")
             for i in range(len(components)):
                 print(f"Componente {i + 1}: {components[i]} con {len(components[i])} vértices.")             
-                
-    def show(self):
+    
+    def show_all(self):
         node_labels = {}
         node_positions = {}
         for a in self.Aero:
