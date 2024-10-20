@@ -132,11 +132,7 @@ class Graph:
                 )
         
         print("Mostrando")
-        plt.show()
-        
-        #labels = dict(self.Aero)
-        #nx.draw(self.view, pos, with_labels = True)
-        #plt.show()
+        plt.show()        
 
     # def prim(self, nodo_inicial):
     #     # Implementación del algoritmo de Prim para hallar el MST desde un nodo inicial

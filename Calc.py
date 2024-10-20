@@ -34,11 +34,11 @@ try:
             source.index = airport_mapping[source.code]
             dest.index = airport_mapping[dest.code]
             
-            # Agregar los aeropuertos
+            # Agregar los aeropuertos si es necesario
             s = g.add_node(source)
             d = g.add_node(dest)
 
-            # Agregar la arista con el peso calculado
+            # Agregar la arista
             e = g.add_edge(source, dest)            
 
 except FileNotFoundError:
