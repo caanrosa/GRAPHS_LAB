@@ -161,8 +161,6 @@ class Graph:
                 total_weight_all_components += weight  
                 print(f"Peso del árbol de expansión mínima de la componente {i}: {weight}")  
                 i += 1
-                if i > 10:  # Limitar a los primeros 1000 pesos
-                    break
                 
             print(f"\nPeso total del árbol de expansión mínima de todas las componentes: {total_weight_all_components}")
             return all_weights                    

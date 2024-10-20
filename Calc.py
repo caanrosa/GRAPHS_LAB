@@ -1,24 +1,20 @@
 from Graph import *
-from Utils import calculate_distance
 import csv
 import os
 
 # Nos piden que el valor de la distancia sea el  peso  de  la  arista que conecte dos aeropuertos
-
-g = Graph(66932)
 dirname = os.path.dirname(__file__)
 file_path = os.path.join(dirname, "dataset/flights_final.csv")
 # Crear un diccionario para mapear los códigos de aeropuertos a enteros
 airport_mapping = {}
 current_id = 0
 
-# Luego agregamos las aristas
+# Crear el diccionario de aeropuertos
 try:
     with open(file_path, mode='r', encoding="utf8") as file:
         lector_csv = csv.DictReader(file)
         
         for fila in lector_csv:
-            # Actualizar el diccionario si es necesario
             source = Aeropuerto(fila)
             dest = Aeropuerto(fila, True)
             
@@ -26,11 +22,23 @@ try:
                 airport_mapping.update({source.code: current_id})
                 current_id = current_id + 1
             
-            
             if dest.code not in airport_mapping:
                 airport_mapping.update({dest.code: current_id})
-                current_id = current_id + 1
-                
+                current_id = current_id + 1          
+
+except FileNotFoundError:
+    print(f"El archivo {file_path} no existe.")
+    
+# Luego agregamos las aristas
+try:
+    with open(file_path, mode='r', encoding="utf8") as file:
+        lector_csv = csv.DictReader(file)
+      
+        g = Graph(len(airport_mapping))
+        
+        for fila in lector_csv:
+            source = Aeropuerto(fila)
+            dest = Aeropuerto(fila, True)
             source.index = airport_mapping[source.code]
             dest.index = airport_mapping[dest.code]
             
