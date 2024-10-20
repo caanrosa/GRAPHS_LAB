@@ -51,9 +51,3 @@ try:
 
 except FileNotFoundError:
     print(f"El archivo {file_path} no existe.")
-
-#print(airport_mapping)
-
-pesocomponente = g.calculate_components_MST_weight()
-print(pesocomponente)
-
