@@ -39,9 +39,7 @@ try:
             d = g.add_node(dest)
 
             # Agregar la arista con el peso calculado
-            e = g.add_edge(source, dest)
-            
-            if(not s or not d or not e): break
+            e = g.add_edge(source, dest)            
 
 except FileNotFoundError:
     print(f"El archivo {file_path} no existe.")
