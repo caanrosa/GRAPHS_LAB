@@ -108,67 +108,28 @@ class Graph:
             print("El grafo tiene", len(components), " componentes.")
             for i in range(len(components)):
                 print(f"Componente {i + 1}: {components[i]} con {len(components[i])} vértices.")
+    
+    def Prim(self):
+        in_mst = [False] * self.n          # Para saber si el nodo ya está en el MST
+        key_values = [float('inf')] * self.n # Para almacenar los pesos mínimos encontrados
+        parents = [-1] * self.n            # Almacena los padres de cada nodo en el MST
 
-    # def prim(self, nodo_inicial):
-    #     # Implementación del algoritmo de Prim para hallar el MST desde un nodo inicial
-    #     visitado = {nodo: False for nodo in self.nodos}
-    #     min_heap = [(0, nodo_inicial)]  # (peso, nodo)
-    #     peso_total = 0
+        key_values[0] = 0  # Empezamos desde el nodo 0
 
-    #     while min_heap:
-    #         peso, nodo = heapq.heappop(min_heap)
-    #         if not visitado[nodo]:
-    #             visitado[nodo] = True
-    #             peso_total += peso
-    #             for vecino, peso_arista in self.aristas[nodo]:
-    #                 if not visitado[vecino]:
-    #                     heapq.heappush(min_heap, (peso_arista, vecino))
-    #     return peso_total
+        print("Arista \tPeso")
+        for _ in range(self.n):
+            # Encuentra el nodo u con el valor mínimo que no está en el MST
+            u = min((v for v in range(self.n) if not in_mst[v]), key=lambda v: key_values[v])
 
-    # def dfs(self, nodo, visitado):
-    #     # Exploración DFS para obtener todos los nodos en una componente conexa
-    #     stack = [nodo]
-    #     componente = []
-    #     while stack:
-    #         actual = stack.pop()
-    #         if not visitado[actual]:
-    #             visitado[actual] = True
-    #             componente.append(actual)
-    #             for vecino, _ in self.aristas[actual]:
-    #                 if not visitado[vecino]:
-    #                     stack.append(vecino)
-    #     return componente
+            in_mst[u] = True
 
-    # def calcular_MST_por_componente(self):
-    #     visitado = {nodo: False for nodo in self.nodos}
-    #     pesos_mst = []
+            # Si el nodo tiene un padre, imprime la arista y el peso correspondiente
+            if parents[u] != -1:
+                print(f"{parents[u]}-{u} \t{self.weights[u][parents[u]]}")
 
-    #     # Explorar cada componente del grafo
-    #     for nodo in self.nodos:
-    #         if not visitado[nodo]:
-    #             # Explorar la componente conexa del nodo usando DFS
-    #             componente = self.dfs(nodo, visitado)
-    #             # Aplicar Prim desde cualquier nodo de la componente
-    #             peso_mst = self.prim(componente[0])
-    #             pesos_mst.append(peso_mst)
-        
-    #     return pesos_mst
-
-
- # def prim(self, nodo_inicial):
-    #     # Implementación del algoritmo de Prim para hallar el MST desde un nodo inicial
-    #     visitado = {nodo: False for nodo in self.nodos}
-    #     min_heap = [(0, nodo_inicial)]  # (peso, nodo)
-    #     peso_total = 0
-
-    #     while min_heap:
-    #         peso, nodo = heapq.heappop(min_heap)
-    #         if not visitado[nodo]:
-    #             visitado[nodo] = True
-    #             peso_total += peso
-    #             for vecino, peso_arista in self.aristas[nodo]:
-    #                 if not visitado[vecino]:
-    #                     heapq.heappush(min_heap, (peso_arista, vecino))
-    #     return peso_total
-
+            # Explora los vecinos del nodo u
+            for v in self.L[u]:
+                if not in_mst[v] and self.weights[u][v] < key_values[v]:  # Solo actualiza si encuentra un peso menor
+                    key_values[v] = self.weights[u][v]
+                    parents[v] = u  # Actualiza el padre del nodo v
 
