@@ -61,6 +61,10 @@ while(running):
                         code2 = getInput()
                         r2 = f.get_info(code2.upper())
                         
-                        if(r2): f.show(r1.index,r2.index)
+                        if(r2): 
+                            show = f.show(r1.index,r2.index)
+                            
+                            if(not show):
+                                printSubtitle("Los aeropuertos no están conectados")
         case 4:
             f.show_all()

@@ -128,6 +128,8 @@ class Graph:
         
         returnable = []
         
+        if(size > len(sortedlist)): size = len(sortedlist)
+        
         for index in range(0, size):
             aeroIndex = distances.index(sortedlist[index])
             returnable.append((self.Aero[aeroIndex], sortedlist[index]))
@@ -209,6 +211,16 @@ class Graph:
        
     # Mostrar el camino más corto entre dos vertices 
     def show(self, v0: int, vf: int):
+        # Sacar del algoritmo los nodos que no están en la componente
+        same = False
+        components = self.get_components()
+        for component in components:
+            if(v0 in component): 
+                if (vf in component):
+                    same = True
+                    break
+        
+        if(not same): return False
         G = nx.Graph()
         dist, pad = self.dijkstra(v0)
         
