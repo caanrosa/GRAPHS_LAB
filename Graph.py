@@ -128,7 +128,7 @@ class Graph:
         
         returnable = []
         
-        if(size > len(sortedlist)): size = len(sortedlist)
+        if(size > len(sortedlist)): size = len(sortedlist) - 1
         
         for index in range(0, size):
             aeroIndex = distances.index(sortedlist[index])
