@@ -51,6 +51,7 @@ while(running):
                             b = elemento[1]
                             
                             printSubtitle(f"[{a.code}] {a.name}\nUbicación: {a.city}, {a.country} ({a.lat} {a.lon}).\nDistancia: {b} km")
+                            print()
 
                 case 3:
                     printSubtitle("Escriba el codigo del aeropuesto de salida")
