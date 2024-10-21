@@ -66,8 +66,12 @@ class Graph:
                     
         return arr.index(min)
     
-    def get_info(self, code: str) -> Aeropuerto:
-        return self.Aero[self.airports_dict[code]]
+    def get_info(self, code: str) -> Aeropuerto | None:
+        try: 
+            return self.Aero[self.airports_dict[code]]
+        except KeyError:
+            printSubtitle("No se encontró ese aeropuerto")
+            return None
     
     # Conseguir los caminos minimos en una componente
     def dijkstra(self, v0: int = 0):
@@ -177,9 +181,7 @@ class Graph:
         return visit
     
     def verify_connectivity(self) -> None:
-        if self.is_connected():
-            print("El grafo es conexo.")
-        else:
+        if not self.is_connected():
             components = self.get_components()
             print("El grafo tiene", len(components), " componentes.")
             for i in range(len(components)):
@@ -226,7 +228,7 @@ class Graph:
         node_labels = {}
         node_positions = {}
         for a in node_list:
-            print(a)
+            printSubtitle(f"[{a.code}] {a.name}\nUbicación: {a.city}, {a.country} ({a.lat} {a.lon}).")
             node_labels.update({a.index: a.code})
             node_positions.update({a.index: (a.lon, a.lat)})
                 
